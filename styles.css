@@ -1,0 +1,74 @@
+/* 摸鱼模式：网页视图样式 */
+
+/* 标签上已经显示站点名，自带的视图标题栏只是多占一行，直接隐藏 */
+.workspace-leaf-content[data-type="moyu-webview"] > .view-header {
+	display: none;
+}
+
+.moyu-view {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 0;
+	overflow: hidden;
+}
+
+.moyu-toolbar {
+	display: flex;
+	align-items: center;
+	gap: var(--size-4-2);
+	flex: 0 0 auto;
+	padding: var(--size-4-1) var(--size-4-3);
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.moyu-toolbar .dropdown {
+	flex: 0 0 auto;
+	max-width: 220px;
+}
+
+.moyu-address {
+	flex: 1 1 auto;
+	min-width: 0;
+	padding: 0 var(--size-4-1);
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	user-select: text;
+}
+
+.moyu-nav,
+.moyu-refresh {
+	flex: 0 0 auto;
+}
+
+.moyu-body {
+	display: flex;
+	flex: 1 1 auto;
+	min-height: 0;
+}
+
+.moyu-body webview {
+	display: flex;
+	flex: 1 1 auto;
+	width: 100%;
+	height: 100%;
+}
+
+.moyu-empty {
+	margin: auto;
+	padding: var(--size-4-6);
+	color: var(--text-muted);
+	font-size: var(--font-ui-medium);
+	text-align: center;
+}
+
+.moyu-empty p {
+	margin: 0 0 var(--size-4-2);
+}
+
+.moyu-empty button {
+	margin-top: var(--size-4-2);
+}
