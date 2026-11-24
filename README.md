@@ -1,6 +1,6 @@
-# 摸鱼模式 (Moyu Mode)
+# Moyu Mode (摸鱼模式)
 
-![摸鱼模式 — 把网页作为工作区标签打开，鼠标离开后自动切回笔记](assets/promo.png)
+![Moyu Mode（摸鱼模式）— 把网页作为工作区标签打开，鼠标离开后自动切回笔记](assets/promo.png)
 
 An Obsidian plugin that opens a website as a workspace tab and switches back to your notes as soon as the cursor leaves the page.
 

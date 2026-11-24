@@ -1,6 +1,6 @@
 {
 	"name": "moyu-mode",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "将网页作为工作区标签打开，鼠标离开视图时自动切回笔记",
 	"main": "main.js",
 	"type": "module",

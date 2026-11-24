@@ -1,9 +1,9 @@
 {
 	"id": "moyu-mode",
-	"name": "摸鱼模式",
-	"version": "1.0.0",
+	"name": "Moyu Mode",
+	"version": "1.0.1",
 	"minAppVersion": "1.2.3",
-	"description": "把网页作为工作区标签打开，鼠标离开网页视图时自动切回笔记。",
+	"description": "Open web pages as workspace tabs and switch back to your notes when the cursor leaves the page.",
 	"author": "bugstack27",
 	"authorUrl": "https://github.com/BugStack27",
 	"isDesktopOnly": true
