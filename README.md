@@ -23,7 +23,7 @@ Install through [BRAT](https://github.com/TfTHacker/obsidian42-brat):
 1. In **Settings → Community plugins**, turn off restricted mode, then install and enable **BRAT**.
 2. Open the **BRAT** settings and choose **Add beta plugin**.
 3. Enter the repository: `BugStack27/obsidian-moyu-mode`
-4. Confirm, wait for BRAT to fetch the latest release, then enable **摸鱼模式** in **Settings → Community plugins**.
+4. Confirm, wait for BRAT to fetch the latest release, then enable **Moyu Mode** in **Settings → Community plugins**.
 
 Manual install: download `main.js`, `manifest.json` and `styles.css` from [Releases](https://github.com/BugStack27/obsidian-moyu-mode/releases), put them in `<vault>/.obsidian/plugins/moyu-mode/`, restart Obsidian and enable the plugin.
 
@@ -31,7 +31,7 @@ Manual install: download `main.js`, `manifest.json` and `styles.css` from [Relea
 
 ## Usage
 
-1. Open **Settings → 摸鱼模式** and add a site: a name and its URL. Several sites can be kept and reordered, and one of them is the default.
+1. Open **Settings → Moyu Mode** and add a site: a name and its URL. Several sites can be kept and reordered, and one of them is the default.
 2. Click the globe ribbon icon or run **打开网页标签** from the command palette. The site loads in a new tab.
 3. Move the cursor out of the page: a note appears in the same tab group, according to the fallback mode.
 4. Hover the tab header to bring the page back, or click the tab.
@@ -92,7 +92,7 @@ npm version patch   # updates package.json, manifest.json, versions.json and tag
 git push --follow-tags
 ```
 
-Pushing the tag makes GitHub Actions run the type check and build, then publish a release titled **摸鱼模式 `version`** with `main.js`, `manifest.json`, `styles.css` and build provenance. The tag message becomes the release notes.
+Pushing the tag makes GitHub Actions run the type check and build, then publish a release titled **Moyu Mode `version`** with `main.js`, `manifest.json`, `styles.css` and build provenance. The tag message becomes the release notes.
 
 ## License
 
@@ -124,7 +124,7 @@ Pushing the tag makes GitHub Actions run the type check and build, then publish 
    ```
    BugStack27/obsidian-moyu-mode
    ```
-4. 确认并等待 BRAT 拉取最新 Release，然后在 **设置 → 第三方插件** 中启用 **摸鱼模式**。
+4. 确认并等待 BRAT 拉取最新 Release，然后在 **设置 → 第三方插件** 中启用 **Moyu Mode**。
 
 手动安装：从 [Releases](https://github.com/BugStack27/obsidian-moyu-mode/releases) 下载 `main.js`、`manifest.json`、`styles.css`，放入 `<库>/.obsidian/plugins/moyu-mode/`，重启 Obsidian 后启用。
 
@@ -132,7 +132,7 @@ Pushing the tag makes GitHub Actions run the type check and build, then publish 
 
 ### 使用
 
-1. 打开 **设置 → 摸鱼模式**，添加一个站点：填写名称和网址。可以保存多个站点、调整顺序，并指定默认站点。
+1. 打开 **设置 → Moyu Mode**，添加一个站点：填写名称和网址。可以保存多个站点、调整顺序，并指定默认站点。
 2. 点击左侧功能区的地球图标，或在命令面板执行 **打开网页标签**，站点会在新标签里加载。
 3. 把鼠标移出网页，同一标签组里会出现一篇笔记，具体显示哪篇由「回退方式」决定。
 4. 把鼠标悬停在网页标签头上即可回到网页，或直接点击标签。
@@ -193,7 +193,7 @@ npm version patch   # 同步更新 package.json、manifest.json、versions.json�
 git push --follow-tags
 ```
 
-推送 tag 后，GitHub Actions 会执行类型检查与构建，直接发布标题为 **摸鱼模式 `版本号`** 的 Release，附带 `main.js`、`manifest.json`、`styles.css` 与构建证明；tag 信息会作为 Release 说明。
+推送 tag 后，GitHub Actions 会执行类型检查与构建，直接发布标题为 **Moyu Mode `版本号`** 的 Release，附带 `main.js`、`manifest.json`、`styles.css` 与构建证明；tag 信息会作为 Release 说明。
 
 ### 许可
 
