@@ -92,7 +92,7 @@ npm version patch   # updates package.json, manifest.json, versions.json and tag
 git push --follow-tags
 ```
 
-Pushing the tag makes GitHub Actions run the type check and build, then create a draft release with `main.js`, `manifest.json`, `styles.css` and build provenance. Review it and publish the release manually.
+Pushing the tag makes GitHub Actions run the type check and build, then publish a release titled **摸鱼模式 `version`** with `main.js`, `manifest.json`, `styles.css` and build provenance. The tag message becomes the release notes.
 
 ## License
 
@@ -193,7 +193,7 @@ npm version patch   # 同步更新 package.json、manifest.json、versions.json�
 git push --follow-tags
 ```
 
-推送 tag 后，GitHub Actions 会执行类型检查与构建，生成包含 `main.js`、`manifest.json`、`styles.css` 的 Release（draft），并记录构建证明。确认无误后手动发布该 Release。
+推送 tag 后，GitHub Actions 会执行类型检查与构建，直接发布标题为 **摸鱼模式 `版本号`** 的 Release，附带 `main.js`、`manifest.json`、`styles.css` 与构建证明；tag 信息会作为 Release 说明。
 
 ### 许可
 
