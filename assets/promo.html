@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>摸鱼模式 — 宣传图</title>
+<style>
+  :root {
+    --bg: #f5f5fa;
+    --line: rgba(26, 22, 52, 0.09);
+    --text: #211f33;
+    --muted: #5d5a74;
+    --faint: #8a86a0;
+    --accent: #6f5cf1;
+    --accent-2: #0f9e91;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 1280px;
+    height: 760px;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 52px 56px 0;
+    display: flex;
+    flex-direction: column;
+    background:
+      radial-gradient(900px 520px at 8% -10%, rgba(124, 101, 255, 0.16), transparent 62%),
+      radial-gradient(760px 520px at 105% 12%, rgba(15, 158, 145, 0.11), transparent 60%),
+      radial-gradient(700px 600px at 60% 120%, rgba(124, 101, 255, 0.09), transparent 65%);
+  }
+
+  .canvas::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(40, 30, 80, 0.07) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: radial-gradient(1200px 700px at 50% 40%, #000 20%, transparent 78%);
+    pointer-events: none;
+  }
+
+  .grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 520px 1fr;
+    gap: 44px;
+    align-items: start;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ---------- Left column ---------- */
+  .left { display: flex; flex-direction: column; padding-top: 6px; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 6px 12px 6px 10px;
+    border: 1px solid rgba(111, 92, 241, 0.30);
+    background: rgba(111, 92, 241, 0.07);
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: #5b48c8;
+  }
+  .badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 8px rgba(15, 158, 145, 0.55);
+  }
+
+  h1 {
+    margin-top: 22px;
+    font-size: 62px;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+    background: linear-gradient(100deg, #241f3d 10%, #5b48c8 56%, #0f9e91 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .latin {
+    margin-top: 8px;
+    font-size: 12px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: #8a86a0;
+    font-weight: 600;
+  }
+
+  .subtitle {
+    margin-top: 14px;
+    font-size: 19px;
+    color: #4a4660;
+    letter-spacing: 0.01em;
+  }
+  .subtitle b { color: #0c8f83; font-weight: 600; }
+
+  .lede {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.72;
+    color: var(--muted);
+    max-width: 440px;
+  }
+
+  .features {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .feature { display: flex; gap: 12px; }
+  .ficon {
+    flex-shrink: 0;
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, rgba(111, 92, 241, 0.13), rgba(15, 158, 145, 0.09));
+    border: 1px solid rgba(111, 92, 241, 0.22);
+    color: #5f4dd0;
+  }
+  .ficon svg { width: 16px; height: 16px; }
+  .ftext { padding-top: 1px; }
+  .ftext .t { font-size: 14.5px; font-weight: 600; color: #2a2740; letter-spacing: 0.01em; }
+  .ftext .d { margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: var(--faint); }
+
+  /* ---------- Right: workspace mock ---------- */
+  .stage { position: relative; padding-top: 12px; min-width: 0; }
+
+  .glow {
+    position: absolute;
+    inset: 8% 4% 4% 2%;
+    background: radial-gradient(closest-side, rgba(111, 92, 241, 0.20), transparent 72%);
+    filter: blur(26px);
+    pointer-events: none;
+  }
+
+  .panel-wrap {
+    position: relative;
+    border-radius: 22px;
+    padding: 1px;
+    background: linear-gradient(155deg, rgba(111, 92, 241, 0.42), rgba(255, 255, 255, 0.9) 42%, rgba(15, 158, 145, 0.28));
+    box-shadow: 0 24px 60px rgba(38, 32, 84, 0.14);
+  }
+
+  .panel {
+    border-radius: 21px;
+    background: #ffffff;
+    overflow: hidden;
+    height: 552px;
+    position: relative;
+  }
+  .panel::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 70px;
+    background: linear-gradient(180deg, transparent, #ffffff 88%);
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* Tab strip */
+  .tabs {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    padding: 10px 12px 0;
+    background: #ecebf3;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 9px 9px 0 0;
+    font-size: 11.5px;
+    color: #6f6b86;
+    background: rgba(255, 255, 255, 0.35);
+  }
+  .tab svg { width: 12px; height: 12px; opacity: 0.75; }
+  .tab.active {
+    background: #ffffff;
+    color: #262338;
+    font-weight: 600;
+    box-shadow: 0 -1px 0 rgba(26, 22, 52, 0.06);
+    position: relative;
+  }
+  .tab.active::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 9px 9px 0 0;
+  }
+  .tab .new {
+    margin-left: 4px;
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    color: #8a86a0;
+  }
+
+  /* Hover hint on the tab */
+  .tab-hover {
+    position: absolute;
+    left: 132px;
+    top: 6px;
+    width: 96px;
+    height: 38px;
+    border: 1.5px dashed rgba(15, 158, 145, 0.55);
+    border-radius: 10px;
+    background: rgba(15, 158, 145, 0.06);
+    pointer-events: none;
+  }
+  .cursor {
+    position: absolute;
+    left: 210px;
+    top: 28px;
+    width: 17px;
+    height: 17px;
+    filter: drop-shadow(0 2px 3px rgba(20, 16, 50, 0.3));
+    z-index: 8;
+  }
+
+  /* Web toolbar */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line);
+    background: #fbfbfd;
+  }
+  .site-select {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 9px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: #ffffff;
+    font-size: 11px;
+    color: #3d3958;
+    flex-shrink: 0;
+  }
+  .site-select svg { width: 10px; height: 10px; color: #8a86a0; }
+  .site-select .globe { width: 12px; height: 12px; color: var(--accent); opacity: 0.9; }
+  .address {
+    flex: 1;
+    min-width: 0;
+    font-size: 10.5px;
+    color: #8a86a0;
+    padding: 4px 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .navbtns { display: flex; gap: 6px; flex-shrink: 0; }
+  .navbtn {
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    color: #6f6b86;
+    background: #f1f0f6;
+  }
+  .navbtn svg { width: 12px; height: 12px; }
+  .navbtn.dim { color: #b6b3c6; }
+
+  /* Fake website */
+  .web {
+    height: 380px;
+    background: #f7f8fa;
+    overflow: hidden;
+    position: relative;
+  }
+  .web-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 18px;
+    background: #ffffff;
+    border-bottom: 1px solid rgba(26, 22, 52, 0.06);
+  }
+  .brand {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 13px; font-weight: 700; color: #1e63c8;
+    letter-spacing: 0.01em;
+  }
+  .brand .mark {
+    width: 18px; height: 18px;
+    border-radius: 5px;
+    background: linear-gradient(150deg, #338aff, #1e5fc0);
+    display: flex; align-items: center; justify-content: center;
+    color: #ffffff;
+  }
+  .brand .mark svg { width: 11px; height: 11px; }
+  .web-links { display: flex; gap: 14px; font-size: 10.5px; color: #6f6b86; }
+  .web-links .on { color: #1e63c8; font-weight: 600; }
+  .web-search {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 6px;
+    width: 130px;
+    padding: 5px 9px;
+    background: #f2f4f8;
+    border-radius: 999px;
+    font-size: 10px;
+    color: #9a97ab;
+  }
+  .web-search svg { width: 10px; height: 10px; }
+  .avatar {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: linear-gradient(140deg, #ffc46b, #f2739b);
+  }
+
+  .web-body { padding: 14px 18px; }
+  .sec-head {
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 12px; font-weight: 600; color: #2a2740;
+    margin-bottom: 9px;
+  }
+  .sec-head .more { margin-left: auto; font-size: 9.5px; font-weight: 400; color: #9a97ab; }
+
+  .continue {
+    display: flex; gap: 12px;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid rgba(26, 22, 52, 0.05);
+    margin-bottom: 14px;
+  }
+  .continue .cover {
+    width: 46px; height: 62px;
+    border-radius: 4px;
+    background: linear-gradient(150deg, #0f9e91, #1c5f8a);
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 9px;
+    line-height: 1.25;
+    padding: 8px 6px;
+    flex-shrink: 0;
+    letter-spacing: 0.06em;
+    box-shadow: 0 4px 10px rgba(15, 80, 120, 0.25);
+  }
+  .continue .cover span { display: block; }
+  .continue .meta { flex: 1; min-width: 0; padding-top: 2px; }
+  .continue .book { font-size: 11.5px; font-weight: 600; color: #262338; }
+  .continue .author { margin-top: 2px; font-size: 9.5px; color: #8a86a0; }
+  .progress {
+    margin-top: 12px;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .bar { flex: 1; height: 3px; border-radius: 999px; background: #e7e6ee; overflow: hidden; }
+  .bar i { display: block; width: 62%; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+  .progress .pct { font-size: 9px; color: #8a86a0; }
+
+  .shelf { display: grid; grid-template-columns: repeat(4, 1fr); gap: 11px; }
+  .book-card { min-width: 0; }
+  .book-card .bc {
+    height: 78px;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.94);
+    font-size: 9.5px;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+    padding: 9px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 5px 12px rgba(40, 34, 90, 0.14);
+  }
+  .book-card .bc .by { font-size: 7.5px; opacity: 0.75; letter-spacing: 0; }
+  .bc.b1 { background: linear-gradient(155deg, #6f5cf1, #3d3aa8); }
+  .bc.b2 { background: linear-gradient(155deg, #e0944a, #b5563c); }
+  .bc.b3 { background: linear-gradient(155deg, #2f8f7e, #1d4f63); }
+  .bc.b4 { background: linear-gradient(155deg, #5573c9, #2a3d76); }
+  .book-card .bt { margin-top: 6px; font-size: 9.5px; color: #3d3958; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .book-card .ba { margin-top: 1px; font-size: 8.5px; color: #9a97ab; }
+
+  /* Floating callouts */
+  .float {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 13px 8px 9px;
+    border-radius: 13px;
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(111, 92, 241, 0.28);
+    box-shadow:
+      0 16px 36px rgba(40, 34, 90, 0.16),
+      inset 0 1px 0 #ffffff;
+    font-size: 11.5px;
+    color: #4d4966;
+    white-space: nowrap;
+    z-index: 9;
+  }
+  .float .ico {
+    width: 25px; height: 25px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, rgba(111, 92, 241, 0.16), rgba(15, 158, 145, 0.10));
+    border: 1px solid rgba(111, 92, 241, 0.22);
+    color: #5f4dd0;
+  }
+  .float .ico svg { width: 13px; height: 13px; }
+  .float b { color: #17142a; font-weight: 600; }
+  .float .k {
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em;
+    color: #5b48c8; background: rgba(111, 92, 241, 0.10);
+    padding: 2px 6px; border-radius: 5px;
+  }
+  .float.a { left: -16px; bottom: -30px; }
+  .float.b { right: 6px; bottom: -30px; border-color: rgba(15, 158, 145, 0.28); }
+  .float.b .ico {
+    background: linear-gradient(160deg, rgba(15, 158, 145, 0.14), rgba(111, 92, 241, 0.08));
+    border-color: rgba(15, 158, 145, 0.24);
+    color: #0c8f83;
+  }
+  .float.b .k { color: #0b7c72; background: rgba(15, 158, 145, 0.10); }
+
+  /* ---------- Footer ---------- */
+  .footer {
+    position: relative;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 0 18px;
+    margin-top: 10px;
+    border-top: 1px solid rgba(26, 22, 52, 0.08);
+    font-size: 12px;
+    color: #8a86a0;
+  }
+  .footer .pills { display: flex; gap: 8px; }
+  .footer .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(26, 22, 52, 0.10);
+    background: rgba(255, 255, 255, 0.65);
+    color: #5d5a74;
+  }
+  .footer .pill svg { width: 12px; height: 12px; color: var(--accent-2); }
+  .footer .repo { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: #6c6785; }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="grid">
+      <!-- Left: pitch -->
+      <div class="left">
+        <div class="badge"><span class="dot"></span>Obsidian 社区插件</div>
+
+        <h1>摸鱼模式</h1>
+        <div class="latin">Moyu Mode</div>
+        <div class="subtitle">网页当标签，<b>离开即回笔记</b></div>
+        <p class="lede">
+          把网页作为普通工作区标签打开，和笔记并排。鼠标一离开网页，
+          同一标签组里立刻出现笔记；光标回到标签头，又悄悄切回网页。
+        </p>
+
+        <div class="features">
+          <div class="feature">
+            <div class="ficon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18"/><path d="M7 6.5h.01"/>
+              </svg>
+            </div>
+            <div class="ftext">
+              <div class="t">网页即标签</div>
+              <div class="d">站点开在工作区标签里，与笔记并排；后台常驻，切回不重载。</div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="ficon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 12H8"/><path d="m13 7-5 5 5 5"/><path d="M4 5v14"/>
+              </svg>
+            </div>
+            <div class="ftext">
+              <div class="t">离开即切回</div>
+              <div class="d">轮询系统光标，离开网页与标签头后，同组内自动激活一篇笔记。</div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="ficon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 7h9"/><path d="M4 12h13"/><path d="M4 17h7"/><path d="m18 15 3 3-3 3"/><path d="M21 18h-6"/>
+              </svg>
+            </div>
+            <div class="ftext">
+              <div class="t">三种回退方式</div>
+              <div class="d">保持当前笔记、固定某一篇，或从全库 / 指定文件夹随机挑一篇。</div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="ficon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 4l6 15 2-6 6-2z"/>
+              </svg>
+            </div>
+            <div class="ftext">
+              <div class="t">悬停返回</div>
+              <div class="d">光标停在网页标签头一小会儿，网页立刻回到眼前；延迟可调。</div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="ficon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 5 6 9H3v6h3l5 4z"/><path d="m17 9 4 6"/><path d="m21 9-4 6"/>
+              </svg>
+            </div>
+            <div class="ftext">
+              <div class="t">隐藏时安静</div>
+              <div class="d">切走或失焦时自动暂停音视频并静音，不打扰身边的人。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: workspace mock -->
+      <div class="stage">
+        <div class="glow"></div>
+
+        <div class="panel-wrap">
+          <div class="panel">
+            <div class="tabs">
+              <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>
+                读书笔记
+              </div>
+              <div class="tab active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"/></svg>
+                微信读书
+              </div>
+              <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>
+                写作计划
+              </div>
+              <div class="tab new">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+              </div>
+
+              <div class="tab-hover"></div>
+              <svg class="cursor" viewBox="0 0 24 24" fill="#ffffff" stroke="#262338" stroke-width="1.4" stroke-linejoin="round">
+                <path d="M5 3l14 8-6.2 1.4L10 19z"/>
+              </svg>
+            </div>
+
+            <div class="toolbar">
+              <div class="site-select">
+                <svg class="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"/></svg>
+                微信读书
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="address">weread.qq.com</div>
+              <div class="navbtns">
+                <span class="navbtn dim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m11 6-6 6 6 6"/></svg></span>
+                <span class="navbtn dim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+                <span class="navbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg></span>
+              </div>
+            </div>
+
+            <div class="web">
+              <div class="web-nav">
+                <div class="brand">
+                  <span class="mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M8 8h8"/></svg>
+                  </span>
+                  微信读书
+                </div>
+                <div class="web-links">
+                  <span class="on">首页</span>
+                  <span>书架</span>
+                  <span>分类</span>
+                  <span>榜单</span>
+                </div>
+                <div class="web-search">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                  搜索书名、作者
+                </div>
+                <div class="avatar"></div>
+              </div>
+
+              <div class="web-body">
+                <div class="sec-head">
+                  继续阅读
+                  <span class="more">全部 12 本 ›</span>
+                </div>
+
+                <div class="continue">
+                  <div class="cover"><span>操作</span><span>系统</span><span>导论</span></div>
+                  <div class="meta">
+                    <div class="book">操作系统导论</div>
+                    <div class="author">Remzi H. Arpaci-Dusseau · 已读 4 小时 12 分</div>
+                    <div class="progress">
+                      <div class="bar"><i></i></div>
+                      <span class="pct">62%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sec-head" style="margin-top:2px">
+                  为你推荐
+                  <span class="more">换一批 ›</span>
+                </div>
+
+                <div class="shelf">
+                  <div class="book-card">
+                    <div class="bc b1"><span>人类简史</span><span class="by">尤瓦尔·赫拉利</span></div>
+                    <div class="bt">人类简史</div>
+                    <div class="ba">尤瓦尔·赫拉利</div>
+                  </div>
+                  <div class="book-card">
+                    <div class="bc b2"><span>置身事内</span><span class="by">兰小欢</span></div>
+                    <div class="bt">置身事内</div>
+                    <div class="ba">兰小欢</div>
+                  </div>
+                  <div class="book-card">
+                    <div class="bc b3"><span>深度工作</span><span class="by">卡尔·纽波特</span></div>
+                    <div class="bt">深度工作</div>
+                    <div class="ba">卡尔·纽波特</div>
+                  </div>
+                  <div class="book-card">
+                    <div class="bc b4"><span>代码整洁之道</span><span class="by">Robert C. Martin</span></div>
+                    <div class="bt">代码整洁之道</div>
+                    <div class="ba">Robert C. Martin</div>
+                  </div>
+                  <div class="book-card">
+                    <div class="bc b2"><span>原则</span><span class="by">瑞·达利欧</span></div>
+                    <div class="bt">原则</div>
+                    <div class="ba">瑞·达利欧</div>
+                  </div>
+                  <div class="book-card">
+                    <div class="bc b3"><span>纳瓦尔宝典</span><span class="by">埃里克·乔根森</span></div>
+                    <div class="bt">纳瓦尔宝典</div>
+                    <div class="ba">埃里克·乔根森</div>
+                  </div>
+                  <div class="book-card">
+                    <div class="bc b1"><span>思考，快与慢</span><span class="by">丹尼尔·卡尼曼</span></div>
+                    <div class="bt">思考，快与慢</div>
+                    <div class="ba">丹尼尔·卡尼曼</div>
+                  </div>
+                  <div class="book-card">
+                    <div class="bc b4"><span>沉默的大多数</span><span class="by">王小波</span></div>
+                    <div class="bt">沉默的大多数</div>
+                    <div class="ba">王小波</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="float a">
+          <span class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h11a5 5 0 0 1 5 5v9"/></svg>
+          </span>
+          <span class="k">LEAVE</span>
+          <span>鼠标离开 → 自动<b>切回笔记</b></span>
+        </div>
+        <div class="float b">
+          <span class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4l6 15 2-6 6-2z"/></svg>
+          </span>
+          <span class="k">HOVER</span>
+          <span>悬停标签头 → <b>回到网页</b></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="pills">
+        <span class="pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6l7-3z"/></svg>
+          无遥测 · 只加载你配置的站点
+        </span>
+        <span class="pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/></svg>
+          仅桌面端
+        </span>
+        <span class="pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M12 4v16"/></svg>
+          Obsidian 1.2.3+
+        </span>
+      </div>
+      <div class="repo">github.com/BugStack27/obsidian-moyu-mode</div>
+    </div>
+  </div>
+</body>
+</html>
