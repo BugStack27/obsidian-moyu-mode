@@ -1,5 +1,6 @@
 import { DropdownComponent, ItemView, setIcon, ViewStateResult, WorkspaceLeaf } from 'obsidian';
 import type MoyuPlugin from './main';
+import { WindowFocusWatcher } from './focus-watcher';
 import { MouseWatcher } from './mouse-watcher';
 import { SiteConfig } from './settings';
 import { TabWatcher } from './tab-watcher';
@@ -13,6 +14,9 @@ export class MoyuWebView extends ItemView {
 	private dropdown: DropdownComponent | null = null;
 	private watcher: MouseWatcher | null = null;
 	private tabWatcher: TabWatcher | null = null;
+	private focusWatcher: WindowFocusWatcher | null = null;
+	private windowFocused = true;
+	private mediaPaused = false;
 	private backButton: HTMLButtonElement | null = null;
 	private forwardButton: HTMLButtonElement | null = null;
 	private addressEl: HTMLElement | null = null;
@@ -71,6 +75,7 @@ export class MoyuWebView extends ItemView {
 		this.mountPane(sites);
 		this.createTabWatcher();
 		this.createWatcher();
+		this.createFocusWatcher();
 		this.syncVisibility();
 		if (this.app.workspace.getActiveViewOfType(MoyuWebView) === this) {
 			this.pane?.focus();
@@ -95,12 +100,16 @@ export class MoyuWebView extends ItemView {
 		this.refreshTabHeader();
 	}
 
-	/** 停止鼠标轮询与标签头监听，插件卸载或视图关闭时调用。 */
+	/** 停止鼠标轮询、标签头监听与窗口焦点监听，插件卸载或视图关闭时调用。 */
 	disposeWatchers(): void {
 		this.watcher?.stop();
 		this.watcher = null;
 		this.tabWatcher?.detach();
 		this.tabWatcher = null;
+		this.focusWatcher?.detach();
+		this.focusWatcher = null;
+		this.windowFocused = true;
+		this.mediaPaused = false;
 	}
 
 	/** 轮询参数变化后即时生效，不重建 webview。 */
@@ -287,7 +296,7 @@ export class MoyuWebView extends ItemView {
 	}
 
 	/**
-	 * 可见时轮询鼠标并解除静音；切到别的标签后停止轮询、暂停媒体。
+	 * 可见时轮询鼠标，切到别的标签后停止轮询；隐藏或窗口失焦时暂停媒体。
 	 * 分屏时视图即使不是激活 leaf 也仍然可见，此时判定要继续工作。
 	 */
 	private syncVisibility(): void {
@@ -296,11 +305,27 @@ export class MoyuWebView extends ItemView {
 		}
 		if (this.contentEl.isShown()) {
 			this.watcher?.start();
-			this.pane.setMuted(false);
+		} else {
+			this.watcher?.stop();
+		}
+		this.applyMediaState();
+	}
+
+	/** 视图可见且窗口处于激活状态时才发声，其余情况按开关暂停并静音。 */
+	private applyMediaState(): void {
+		if (!this.pane) {
 			return;
 		}
-		this.watcher?.stop();
+		if (this.windowFocused && this.contentEl.isShown()) {
+			this.pane.setMuted(false);
+			if (this.mediaPaused) {
+				this.mediaPaused = false;
+				this.pane.resumeMedia();
+			}
+			return;
+		}
 		if (this.plugin.settings.pauseMediaOnHide) {
+			this.mediaPaused = true;
 			this.pane.pauseMedia();
 			this.pane.setMuted(true);
 		}
@@ -319,6 +344,18 @@ export class MoyuWebView extends ItemView {
 				this.plugin.handleMouseLeave(this.leaf);
 			},
 		});
+	}
+
+	private createFocusWatcher(): void {
+		this.focusWatcher = new WindowFocusWatcher({
+			win: this.contentEl.ownerDocument.defaultView ?? window,
+			isGuestFocused: () => this.pane?.isFocused() ?? false,
+			onChange: (focused) => {
+				this.windowFocused = focused;
+				this.syncVisibility();
+			},
+		});
+		this.focusWatcher.attach();
 	}
 
 	private createTabWatcher(): void {

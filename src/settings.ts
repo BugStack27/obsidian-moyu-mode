@@ -241,7 +241,7 @@ export class MoyuSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('回退时暂停媒体')
-			.setDesc('暂停视频/音频并静音')
+			.setDesc('网页被切走或 Obsidian 失焦时暂停视频/音频并静音')
 			.addToggle((toggle) => {
 				toggle.setValue(this.plugin.settings.pauseMediaOnHide).onChange((value) => {
 					this.plugin.settings.pauseMediaOnHide = value;

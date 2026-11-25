@@ -53,7 +53,7 @@ First-time users start with an empty site list; the web tab links straight to th
 | Restore delay       | 120 ms              | 0–2000 ms; how long the tab header must be hovered to return  |
 | Edge tolerance      | 6 px                | 0–40 px; slack around the page edge to avoid jitter           |
 | Fall back on blur   | On                  | Fall back immediately when Obsidian loses focus               |
-| Pause media on hide | On                  | Pause video/audio and mute the page when it is hidden         |
+| Pause media on hide | On                  | Pause video/audio and mute the page when the tab is hidden or Obsidian loses focus |
 
 Settings are stored in the plugin's `data.json`.
 
@@ -154,7 +154,7 @@ Pushing the tag makes GitHub Actions run the type check and build, then publish 
 | 恢复延迟       | 120 毫秒  | 0–2000 毫秒，标签头悬停多久后切回网页           |
 | 边缘容错       | 6 像素    | 0–40 像素，网页边缘的判定余量，避免抖动           |
 | 失焦时回退      | 开       | Obsidian 失去焦点时立即回退               |
-| 回退时暂停媒体    | 开       | 网页被隐藏时暂停音视频并静音                   |
+| 回退时暂停媒体    | 开       | 网页被隐藏或 Obsidian 失焦时暂停音视频并静音，回来后继续播放 |
 
 设置保存在插件的 `data.json` 中。
 
@@ -164,7 +164,7 @@ Pushing the tag makes GitHub Actions run the type check and build, then publish 
 - **登录态留在本地**：webview 使用持久化会话分区 `persist:moyu`，Cookie 和站点存储保存在 Obsidian 自己的用户数据目录里，不写入库、也不随库同步。
 - **光标轮询**：网页可见时，插件按轮询间隔通过 Electron 的屏幕接口读取系统光标位置，只用于和网页矩形做比较，不保存、不记录。
 - **库内访问**：随机模式下会枚举库中的 Markdown 文件路径（`vault.getMarkdownFiles()`）来挑一篇笔记；其他模式不读取笔记。插件只写自己的 `data.json`。
-- **注入脚本**：网页加载完成后注入一小段脚本，把 `target="_blank"` 的链接留在当前标签内；网页隐藏时通过 `executeJavaScript` 暂停媒体。不读取、不上传页面内容。
+- **注入脚本**：网页加载完成后注入一小段脚本，把 `target="_blank"` 的链接留在当前标签内；网页隐藏或 Obsidian 失焦时通过 `executeJavaScript` 暂停媒体，回来后续播此前由插件暂停的内容。不读取、不上传页面内容。
 - **弹窗打开时暂停判定**，在对话框里操作不会被当成「离开网页」而误触发回退。
 
 ### 兼容性

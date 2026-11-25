@@ -1,8 +1,13 @@
+interface ElectronWebContents {
+	isFocused?: () => boolean;
+}
+
 interface ElectronWebviewElement extends HTMLElement {
 	loadURL(url: string): Promise<void>;
 	reload(): void;
 	executeJavaScript(code: string): Promise<unknown>;
 	setAudioMuted(muted: boolean): void;
+	getWebContents?(): ElectronWebContents | null;
 	canGoBack(): boolean;
 	goBack(): void;
 	canGoForward(): boolean;
@@ -124,23 +129,69 @@ export class WebviewPane {
 		this.webview.focus();
 	}
 
-	/** 失活时暂停正在播放的媒体，避免后台发声。 */
+	/** 焦点是否落在网页内容里，用于区分「点了网页」和「切到其他应用」。 */
+	isFocused(): boolean {
+		if (!this.ready) {
+			return false;
+		}
+		try {
+			return this.webview.getWebContents?.()?.isFocused?.() ?? false;
+		} catch {
+			return false;
+		}
+	}
+
+	/** 记下正在播放的媒体并暂停，恢复后由 resumeMedia 续播。 */
 	pauseMedia(): void {
 		if (!this.ready) {
 			return;
 		}
 		this.webview
 			.executeJavaScript(`
-				document.querySelectorAll('video, audio').forEach((media) => {
-					try {
-						media.pause();
-					} catch (error) {
-						// 部分媒体元素不可控，忽略即可。
-					}
-				});
+				(() => {
+					const paused = [];
+					document.querySelectorAll('video, audio').forEach((media) => {
+						try {
+							if (media.paused) return;
+							media.pause();
+							paused.push(media);
+						} catch (error) {
+							// 部分媒体元素不可控，忽略即可。
+						}
+					});
+					const previous = Array.isArray(window.__moyuPausedMedia) ? window.__moyuPausedMedia : [];
+					window.__moyuPausedMedia = previous.concat(paused);
+				})();
 			`)
 			.catch(() => {
 				// 页面禁止脚本注入时无法暂停，静音仍然生效。
+			});
+	}
+
+	/** 只续播此前由插件暂停的媒体，用户自己暂停的不动。 */
+	resumeMedia(): void {
+		if (!this.ready) {
+			return;
+		}
+		this.webview
+			.executeJavaScript(`
+				(() => {
+					const paused = Array.isArray(window.__moyuPausedMedia) ? window.__moyuPausedMedia : [];
+					window.__moyuPausedMedia = [];
+					paused.forEach((media) => {
+						try {
+							const result = media.play();
+							if (result && typeof result.catch === 'function') {
+								result.catch(() => {});
+							}
+						} catch (error) {
+							// 自动播放受限或页面禁止时忽略，保持静音即可。
+						}
+					});
+				})();
+			`)
+			.catch(() => {
+				// 页面禁止脚本注入时无法续播，忽略即可。
 			});
 	}
 
